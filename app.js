@@ -3,15 +3,19 @@ const UserController = require("./src/controllers/user-controller");
 const server = http.createServer(async (req, res) => {
     const userController = new UserController()
     if (req.url === "/users" && req.method === "GET") {
-        await userController.get(req, res)
+        return await userController.get(req, res)
     }
 
     if (req.url === "/users" && req.method === "POST") {
 
-        await userController.create(req, res)
+        return await userController.create(req, res)
     }
 
-    // If no route present
+    if (req.url.includes("/users/") && req.method === "DELETE") {
+
+        return await userController.delete(req, res)
+    }
+
     else {
         res.writeHead(404, { "Content-Type": "application/json" });
         res.end(JSON.stringify({ message: "Route not found" }));
