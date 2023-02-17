@@ -3,8 +3,7 @@ const fs = require('fs').promises;
 
 class FSUserRepository {
     async create(user) {
-        const users = await fs.readFile('./users.json')
-        const allUsers = JSON.parse(users)
+        const allUsers = await this.get()
         allUsers.push(user)
         await fs.writeFile('./users.json', JSON.stringify(allUsers, null, 2))
         return user
@@ -25,6 +24,12 @@ class FSUserRepository {
 
         return user
 
+    }
+
+    async delete(cpf) {
+        let users = await this.get()
+        users = users.filter(user => user.cpf !== cpf)
+        await fs.writeFile('./users.json', JSON.stringify(users, null, 2))
     }
 
 
