@@ -1,2 +1,3 @@
 # vanilla-node-api
-A car rental api using only pure Node
+
+A user crud using only pure Node
