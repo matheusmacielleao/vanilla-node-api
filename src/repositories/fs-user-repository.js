@@ -32,6 +32,23 @@ class FSUserRepository {
         await fs.writeFile('./users.json', JSON.stringify(users, null, 2))
     }
 
+    async update(cpf, payload) {
+        const users = await this.get()
+
+        let updatedUser
+        users.forEach(user => {
+            if (user.cpf === cpf) {
+                user.name = payload.name || user.name
+                user.birthDate = payload.birthDate || user.birthDate
+                updatedUser = user
+            }
+        });
+
+        await fs.writeFile('./users.json', JSON.stringify(users, null, 2))
+
+        return updatedUser
+    }
+
 
 }
 

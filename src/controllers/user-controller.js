@@ -1,7 +1,8 @@
-const FSUserRepository = require("../repositories/userRepo");
+const FSUserRepository = require("../repositories/fs-user-repository");
 const createUser = require("../use-cases/user/create-user");
 const deleteUser = require("../use-cases/user/delete-user");
 const getUsers = require("../use-cases/user/get-users");
+const updateUser = require("../use-cases/user/update-user");
 const getReqData = require("../utils/req-utils");
 
 class UserController {
@@ -43,9 +44,22 @@ class UserController {
     try {
       const cpf = req.url.split("/")[2];
       await deleteUser({ userRepo: this.userRepo, cpf });
-
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end();
+    } catch (error) {
+      res.writeHead(error.statusCode || 400, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ message: error.message }));
+    }
+  }
+
+  async update(req, res) {
+    try {
+      const cpf = req.url.split("/")[2];
+      const body = await getReqData(req)
+      const user = await updateUser({ userRepo: this.userRepo, cpf, payload: body });
+
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(user));
     } catch (error) {
       res.writeHead(error.statusCode || 400, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ message: error.message }));
